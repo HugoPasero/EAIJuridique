@@ -23,8 +23,8 @@ public class ServiceJuridique {
     private HashMap<Long, PreConvention> conv;
 
     public ServiceJuridique() throws NamingException {
-        this.conv = new HashMap();
-        //this.recevoir();
+            this.conv = new HashMap();
+            this.recevoir();      
     }
 
     public HashMap<Long, PreConvention> getConv() {
@@ -56,7 +56,7 @@ public class ServiceJuridique {
         String factoryName = "jms/__defaultConnectionFactory";
         String destName = "ConventionEnCours";
         Destination dest = null;
-        int count = 100;
+        int count = 2;
         Session session = null;
         MessageConsumer receiver = null;
         

@@ -27,7 +27,7 @@ public class ListePreConv extends javax.swing.JFrame {
     public ListePreConv() throws NamingException {
         initComponents();
         
-        s = new ServiceJuridique();
+        //s = new ServiceJuridique();
         //conv = s.recevoir();
         /*Diplome d = new Diplome(1L, Diplome.Niveau.M2, "MIAGE");
         Etudiant e1 = new Etudiant(1L, "Murillo--Cantié", "Emma", "MAIF", "maif1", d);
@@ -255,6 +255,11 @@ public class ListePreConv extends javax.swing.JFrame {
     }//GEN-LAST:event_bPuOkActionPerformed
 
     private void bMajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bMajActionPerformed
+        try {
+            s = new ServiceJuridique();
+        } catch (NamingException ex) {
+            Logger.getLogger(ListePreConv.class.getName()).log(Level.SEVERE, null, ex);
+        }
         //try {
             conv = s.getConv();
         //} catch (NamingException ex) {
