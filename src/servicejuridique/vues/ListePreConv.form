@@ -112,8 +112,8 @@
         <Container class="javax.swing.JPanel" name="jPanel3">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Refus&#xe9;es">
-                <Property name="tabTitle" type="java.lang.String" value="Refus&#xe9;es"/>
+              <JTabbedPaneConstraints tabName="&#xc0; Valider">
+                <Property name="tabTitle" type="java.lang.String" value="&#xc0; Valider"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>

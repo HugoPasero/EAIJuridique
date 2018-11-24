@@ -5,6 +5,10 @@
  */
 package servicejuridique.vues;
 
+import donnes.date.DateConvention;
+import donnes.preconvention.Diplome;
+import donnes.preconvention.Etudiant;
+import donnes.preconvention.PreConvention;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,10 +16,6 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
-import servicejuridique.sources.DateConvention;
-import servicejuridique.sources.Diplome;
-import servicejuridique.sources.Etudiant;
-import servicejuridique.sources.PreConvention;
 
 /**
  *
@@ -190,7 +190,7 @@ public class ListePreConv extends javax.swing.JFrame {
                 .addComponent(bOuvrirRefusees))
         );
 
-        tabNavigation.addTab("Refusées", jPanel3);
+        tabNavigation.addTab("À Valider", jPanel3);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

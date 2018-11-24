@@ -5,8 +5,8 @@
  */
 package servicejuridique.vues;
 
+import donnes.date.DateConvention;
 import java.awt.Color;
-import servicejuridique.sources.DateConvention;
 
 /**
  *
@@ -35,8 +35,11 @@ public class DetailsPreConv extends javax.swing.JFrame {
         this.tfDateFin.setText(dFin.toString());
         String duree = DateConvention.nbMois(dDeb.getDate(), dFin.getDate()) + " mois " + DateConvention.nbJours(dDeb.getDate(), dFin.getDate()) + " jours";
         this.tfDuree.setText(duree);
+        
+        //Ne marche pas pour l'instant
         if(DateConvention.nbMois(dDeb.getDate(), dFin.getDate())>6 || (DateConvention.nbMois(dDeb.getDate(), dFin.getDate()) == 6 && DateConvention.nbJours(dDeb.getDate(), dFin.getDate()) > 0))
             this.tfDuree.setBackground(Color.red);
+        
         this.tfAssurNom.setText(this.fenMere.getConv().get(pc).getEtudiant().getAssurance());
         this.tfAssurNumContrat.setText(this.fenMere.getConv().get(pc).getEtudiant().getContrat());
         this.tfEntNom.setText(this.fenMere.getConv().get(pc).getEntreprise());
@@ -180,7 +183,7 @@ public class DetailsPreConv extends javax.swing.JFrame {
                                 .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addComponent(jLabel15))))
-                .addContainerGap(37, Short.MAX_VALUE))
+                .addContainerGap(91, Short.MAX_VALUE))
         );
         pDetailsLegauxLayout.setVerticalGroup(
             pDetailsLegauxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

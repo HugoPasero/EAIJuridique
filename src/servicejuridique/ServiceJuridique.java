@@ -1,10 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package servicejuridique;
 
+import java.text.ParseException;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
@@ -15,7 +11,8 @@ import javax.jms.ObjectMessage;
 import javax.jms.Session;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import servicejuridique.sources.PreConvention;
+import donnes.date.DateConvention;
+import donnes.preconvention.PreConvention;
 
 /**
  *
@@ -26,7 +23,42 @@ public class ServiceJuridique {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws NamingException, JMSException {
+    public static void main(String[] args) throws NamingException, JMSException, ParseException {
+        /*DateConvention dDeb, dFin;
+        /*dDeb = new DateConvention("01/06/2018");
+        dFin = new DateConvention("01/07/2018");
+        System.out.println("Moins de 6 mois");
+        System.out.println(ServiceJuridique.estBonneDuree(dDeb,dFin));
+        dDeb = new DateConvention("01/06/2018");
+        dFin = new DateConvention("15/07/2018");
+        System.out.println("Moins de 6 mois");
+        System.out.println(ServiceJuridique.estBonneDuree(dDeb,dFin));
+        dDeb = new DateConvention("15/06/2018");
+        dFin = new DateConvention("01/07/2018");
+        System.out.println("Moins de 6 mois");
+        System.out.println(ServiceJuridique.estBonneDuree(dDeb,dFin));
+        dDeb = new DateConvention("15/06/2018");
+        dFin = new DateConvention("30/06/2018");
+        System.out.println("Moins de 6 mois");
+        System.out.println(ServiceJuridique.estBonneDuree(dDeb,dFin));
+        
+        dDeb = new DateConvention("01/06/2018");
+        dFin = new DateConvention("01/12/2018");
+        System.out.println("6 mois pile");
+        System.out.println(ServiceJuridique.estBonneDuree(dDeb,dFin));
+        System.out.println("nb mois " );
+        System.out.println("nb jours " + ServiceJuridique.estBonneDuree(dDeb,dFin));
+        
+        /*dDeb = new DateConvention("01/06/2018");
+        dFin = new DateConvention("01/06/2019");
+        System.out.println("Plus de 6 mois");
+        System.out.println(ServiceJuridique.estBonneDuree(dDeb,dFin));*/
+        
+        ServiceJuridique j = new ServiceJuridique();
+        j.recevoir();
+    }
+    
+    public PreConvention recevoir() throws NamingException{
         //System.setProperty
         System.setProperty("java.naming.factory.initial", "com.sun.enterprise.naming.SerialInitContextFactory");
         System.setProperty("org.omg.CORBA.ORBInitialHost", "127.0.0.1");
@@ -46,7 +78,7 @@ public class ServiceJuridique {
         //A dégager 
         try {
             // create the JNDI initial context
-            context = new InitialContext();
+            //context = new InitialContext();
 
             // look up the ConnectionFactory
             factory = (ConnectionFactory) context.lookup(factoryName);
@@ -75,13 +107,14 @@ public class ServiceJuridique {
                     ObjectMessage flux = (ObjectMessage) message;
                     //on récupère l'objet dans le message
                     Object preconvention = flux.getObject();
-                    //on récupère le titre boursier dans l'objet
+                    //on récupère la pré-conv dans l'objet
                     if (preconvention instanceof PreConvention) {
                         PreConvention convention = (PreConvention) preconvention;
                         
-                        //Remplacer ci-dessou et afficher dans l'interface graphique
+                        //Remplacer ci-dessous et afficher dans l'interface graphique
                         System.out.println("Received: " + convention + " " + message.getStringProperty("date"));
-
+                        return convention;
+                        
                     }
 
                 } else if (message != null) {
@@ -111,6 +144,21 @@ public class ServiceJuridique {
                 }
             }
         }
+        return null;
     }
+    
+    public static boolean estBonneDuree(DateConvention dDeb, DateConvention dFin){
+        if(DateConvention.nbMois(dDeb.getDate(), dFin.getDate())>6)
+            return false;
+        else if((DateConvention.nbMois(dDeb.getDate(), dFin.getDate()) == 6 && DateConvention.nbJours(dDeb.getDate(), dFin.getDate()) > 0))
+            return false;
+        return true;
+    }
+    
+    public void envoyer (PreConvention pc) throws NamingException{
+        
+    }
+    
+    
     
 }
