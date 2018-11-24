@@ -5,6 +5,9 @@
     <Container class="javax.swing.JDialog" name="puSelectionUnique">
       <Properties>
         <Property name="title" type="java.lang.String" value="Selection"/>
+        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[363, 100]"/>
+        </Property>
       </Properties>
 
       <Layout>
@@ -46,6 +49,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="OK"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bPuOkActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -74,6 +80,8 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
               <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="bMaj" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
           </Group>
           <Component id="tabNavigation" max="32767" attributes="0"/>
@@ -82,7 +90,10 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="bMaj" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="tabNavigation" max="32767" attributes="0"/>
           </Group>
@@ -122,7 +133,7 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <EmptySpace min="0" pref="299" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="315" max="32767" attributes="0"/>
                       <Component id="bOuvrirRefusees" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Component id="jScrollPane6" alignment="0" pref="0" max="32767" attributes="0"/>
@@ -131,7 +142,7 @@
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="jScrollPane6" pref="232" max="32767" attributes="0"/>
+                      <Component id="jScrollPane6" pref="225" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="bOuvrirRefusees" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -174,5 +185,13 @@
         </Container>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JButton" name="bMaj">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="maj"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bMajActionPerformed"/>
+      </Events>
+    </Component>
   </SubComponents>
 </Form>

@@ -13,54 +13,38 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import donnes.date.DateConvention;
 import donnes.preconvention.PreConvention;
+import java.util.HashMap;
 
 /**
  *
  * @author hugo
  */
 public class ServiceJuridique {
+    private HashMap<Long, PreConvention> conv;
 
+    public ServiceJuridique() throws NamingException {
+        this.conv = new HashMap();
+        //this.recevoir();
+    }
+
+    public HashMap<Long, PreConvention> getConv() {
+        return conv;
+    }
+
+    public void setConv(HashMap<Long, PreConvention> conv) {
+        this.conv = conv;
+    }
+    
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws NamingException, JMSException, ParseException {
-        //Tests date
-        /*DateConvention dDeb, dFin;
-        /*dDeb = new DateConvention("01/06/2018");
-        dFin = new DateConvention("01/07/2018");
-        System.out.println("Moins de 6 mois");
-        System.out.println(ServiceJuridique.estBonneDuree(dDeb,dFin));
-        dDeb = new DateConvention("01/06/2018");
-        dFin = new DateConvention("15/07/2018");
-        System.out.println("Moins de 6 mois");
-        System.out.println(ServiceJuridique.estBonneDuree(dDeb,dFin));
-        dDeb = new DateConvention("15/06/2018");
-        dFin = new DateConvention("01/07/2018");
-        System.out.println("Moins de 6 mois");
-        System.out.println(ServiceJuridique.estBonneDuree(dDeb,dFin));
-        dDeb = new DateConvention("15/06/2018");
-        dFin = new DateConvention("30/06/2018");
-        System.out.println("Moins de 6 mois");
-        System.out.println(ServiceJuridique.estBonneDuree(dDeb,dFin));
-        
-        dDeb = new DateConvention("01/06/2018");
-        dFin = new DateConvention("01/12/2018");
-        System.out.println("6 mois pile");
-        System.out.println(ServiceJuridique.estBonneDuree(dDeb,dFin));
-        System.out.println("nb mois " );
-        System.out.println("nb jours " + ServiceJuridique.estBonneDuree(dDeb,dFin));
-        
-        /*dDeb = new DateConvention("01/06/2018");
-        dFin = new DateConvention("01/06/2019");
-        System.out.println("Plus de 6 mois");
-        System.out.println(ServiceJuridique.estBonneDuree(dDeb,dFin));*/
-        
         //test receiver
-        ServiceJuridique j = new ServiceJuridique();
-        j.recevoir();
+        /*ServiceJuridique j = new ServiceJuridique();
+        j.recevoir();*/
     }
     
-    public PreConvention recevoir() throws NamingException{
+    public HashMap<Long, PreConvention> recevoir() throws NamingException{
         //System.setProperty
         System.setProperty("java.naming.factory.initial", "com.sun.enterprise.naming.SerialInitContextFactory");
         System.setProperty("org.omg.CORBA.ORBInitialHost", "127.0.0.1");
@@ -98,7 +82,8 @@ public class ServiceJuridique {
             // start the connection, to enable message receipt
             connection.start();
 
-            for (int i = 0; i < count; ++i) {
+            //while(true) {
+            for(int i = 0; i < count; ++i){
                 Message message = receiver.receive();
                 if (message instanceof ObjectMessage) {
                     //on récupère le message
@@ -109,9 +94,11 @@ public class ServiceJuridique {
                     if (preconvention instanceof PreConvention) {
                         PreConvention convention = (PreConvention) preconvention;
                         
+                        if(!conv.containsKey(convention.getId()))
+                            conv.put(convention.getId(), convention);
                         //Remplacer ci-dessous et afficher dans l'interface graphique
-                        System.out.println("Received: " + convention + " " + message.getStringProperty("date"));
-                        return convention;
+                        //System.out.println("Received: " + convention + " " + message.getStringProperty("date"));
+                        //return convention;
                         
                     }
 
@@ -142,7 +129,7 @@ public class ServiceJuridique {
                 }
             }
         }
-        return null;
+        return conv;
     }
     
     public static boolean estBonneDuree(DateConvention dDeb, DateConvention dFin){
@@ -153,7 +140,17 @@ public class ServiceJuridique {
         return true;
     }
     
-    public void envoyer (PreConvention pc) throws NamingException{
+    public boolean aExistenceJuridique(String numSIREN){
+        //tester si l'entreprise a une existence juridique
+        return false;
+    }
+    
+    public boolean aAssuranceValide(String compagnie, String numAssurance, DateConvention dateDeb, DateConvention dateFin){
+        //tester si l'étudiant a bien le contrat numAssurance auprès de compagnie sur la période dateDeb-dateFin
+        return false;
+    }
+    
+    public void envoyer (PreConvention pc, boolean validite) throws NamingException{
         
     }
     

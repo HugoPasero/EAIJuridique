@@ -39,7 +39,7 @@
               <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="11" max="32767" attributes="0"/>
+              <EmptySpace pref="27" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="bValider" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="bAnnule" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -152,11 +152,10 @@
                                       <Component id="jLabel13" max="32767" attributes="0"/>
                                       <Component id="jLabel12" max="32767" attributes="0"/>
                                   </Group>
-                                  <Component id="jLabel15" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
-                      <EmptySpace pref="91" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -171,8 +170,6 @@
                       <Component id="jLabel13" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jLabel15" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -191,6 +188,7 @@
                           <Component id="jLabel8" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="tfGratification" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -259,12 +257,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel14">
               <Properties>
-                <Property name="text" type="java.lang.String" value="- Que la p&#xe9;riode ne s&apos;&#xe9;tale pas sur deux"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="jLabel15">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="ann&#xe9;es universitaires"/>
+                <Property name="text" type="java.lang.String" value="- Que la p&#xe9;riode ne s&apos;&#xe9;tale pas sur deux ann&#xe9;es de Fac"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tfGratification">
@@ -366,6 +359,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="V&#xe9;rifier"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bEntVerifierActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -467,6 +463,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="V&#xe9;rifier"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bAssurVerifierActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -581,11 +580,17 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Valider"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bValiderActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="bAnnule">
       <Properties>
         <Property name="text" type="java.lang.String" value="Annuler"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bAnnuleActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

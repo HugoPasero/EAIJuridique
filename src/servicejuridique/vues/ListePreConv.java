@@ -5,33 +5,31 @@
  */
 package servicejuridique.vues;
 
-import donnes.date.DateConvention;
-import donnes.preconvention.Diplome;
-import donnes.preconvention.Etudiant;
 import donnes.preconvention.PreConvention;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.naming.NamingException;
 import javax.swing.table.DefaultTableModel;
+import servicejuridique.ServiceJuridique;
 
 /**
  *
  * @author marieroca
  */
 public class ListePreConv extends javax.swing.JFrame {
+    private ServiceJuridique s;
     private HashMap<Long, PreConvention> conv;
 
     /**
      * Creates new form Juridique
      */
-    public ListePreConv() {
+    public ListePreConv() throws NamingException {
         initComponents();
         
-        conv = new HashMap();
-        Diplome d = new Diplome(1L, Diplome.Niveau.M2, "MIAGE");
+        s = new ServiceJuridique();
+        //conv = s.recevoir();
+        /*Diplome d = new Diplome(1L, Diplome.Niveau.M2, "MIAGE");
         Etudiant e1 = new Etudiant(1L, "Murillo--Cantié", "Emma", "MAIF", "maif1", d);
         Etudiant e2 = new Etudiant(2L, "Pasero", "Hugo", "MAIF", "maif2", d);
         Etudiant e3 = new Etudiant(3L, "Roca", "Marie", "MAAF", "maaf1", d);
@@ -48,32 +46,32 @@ public class ListePreConv extends javax.swing.JFrame {
             //System.out.print(p3.getId());
         } catch (ParseException ex) {
             Logger.getLogger(ListePreConv.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
         
         //ArrayList<PreConvention> pc = new ArrayList(conv.values());
 
-        ((DefaultTableModel) this.tabAValider.getModel()).setRowCount(conv.size());
+        /*((DefaultTableModel) this.tabAValider.getModel()).setRowCount(s.getConv().size());
         
         this.tabAValider.getColumn(tabAValider.getColumnName(0)).setMinWidth(45);
         this.tabAValider.getColumn(tabAValider.getColumnName(0)).setMaxWidth(60);
         
         int i = 0;
-        for(PreConvention c : conv.values()){
+        for(PreConvention c : s.getConv().values()){
             this.tabAValider.setValueAt(c.getId(), i, 0);
             this.tabAValider.setValueAt(c.getEtudiant().getNom(), i, 1);
             this.tabAValider.setValueAt(c.getEtudiant().getPrenom(), i, 2);
             this.tabAValider.setValueAt(c.getEntreprise(), i, 3);
             i++;
-        }   
+        }*/ 
     }
 
     public HashMap<Long, PreConvention> getConv() {
-        return conv;
+        return s.getConv();
     }
 
-    public void setConv(HashMap<Long, PreConvention> conv) {
-        this.conv = conv;
-    }
+    /*public void setConv(HashMap<Long, PreConvention> conv) {
+        s.getConv() = conv;
+    }*¨
 
     
     
@@ -95,12 +93,19 @@ public class ListePreConv extends javax.swing.JFrame {
         bOuvrirRefusees = new javax.swing.JButton();
         jScrollPane6 = new javax.swing.JScrollPane();
         tabAValider = new javax.swing.JTable();
+        bMaj = new javax.swing.JButton();
 
         puSelectionUnique.setTitle("Selection");
+        puSelectionUnique.setMinimumSize(new java.awt.Dimension(363, 100));
 
         jLabel2.setText("Vous devez sélectionner qu'un seul élément");
 
         bPuOk.setText("OK");
+        bPuOk.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bPuOkActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout puSelectionUniqueLayout = new javax.swing.GroupLayout(puSelectionUnique.getContentPane());
         puSelectionUnique.getContentPane().setLayout(puSelectionUniqueLayout);
@@ -178,19 +183,26 @@ public class ListePreConv extends javax.swing.JFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(0, 299, Short.MAX_VALUE)
+                .addGap(0, 315, Short.MAX_VALUE)
                 .addComponent(bOuvrirRefusees))
             .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(bOuvrirRefusees))
         );
 
         tabNavigation.addTab("À Valider", jPanel3);
+
+        bMaj.setText("maj");
+        bMaj.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bMajActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -198,13 +210,17 @@ public class ListePreConv extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(bMaj)
                 .addGap(0, 0, Short.MAX_VALUE))
             .addComponent(tabNavigation)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jLabel1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(bMaj))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tabNavigation))
         );
@@ -222,9 +238,9 @@ public class ListePreConv extends javax.swing.JFrame {
         if(lignes.length > 1){
             this.puSelectionUnique.setVisible(true);
         } else {
-            PreConvention con = (PreConvention) tabAValider.getValueAt(tabAValider.getSelectedRow(),0);
+            //PreConvention con = (PreConvention) tabAValider.getValueAt(tabAValider.getSelectedRow(),0);
             Long key = (Long) tabAValider.getValueAt(tabAValider.getSelectedRow(), 0);
-            PreConvention pc = conv.get(key);
+            //PreConvention pc = conv.get(key);
             DetailsPreConv fen = new DetailsPreConv(this, key);
             fen.setVisible(true);
         }
@@ -233,6 +249,31 @@ public class ListePreConv extends javax.swing.JFrame {
     private void bOuvrirRefuseesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bOuvrirRefuseesMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_bOuvrirRefuseesMouseClicked
+
+    private void bPuOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bPuOkActionPerformed
+        this.puSelectionUnique.dispose();
+    }//GEN-LAST:event_bPuOkActionPerformed
+
+    private void bMajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bMajActionPerformed
+        //try {
+            conv = s.getConv();
+        //} catch (NamingException ex) {
+        //    Logger.getLogger(ListePreConv.class.getName()).log(Level.SEVERE, null, ex);
+        //}
+        ((DefaultTableModel) this.tabAValider.getModel()).setRowCount(conv.size());
+        
+        this.tabAValider.getColumn(tabAValider.getColumnName(0)).setMinWidth(45);
+        this.tabAValider.getColumn(tabAValider.getColumnName(0)).setMaxWidth(60);
+        
+        int i = 0;
+        for(PreConvention c : conv.values()){
+            this.tabAValider.setValueAt(c.getId(), i, 0);
+            this.tabAValider.setValueAt(c.getEtudiant().getNom(), i, 1);
+            this.tabAValider.setValueAt(c.getEtudiant().getPrenom(), i, 2);
+            this.tabAValider.setValueAt(c.getEntreprise(), i, 3);
+            i++;
+        }
+    }//GEN-LAST:event_bMajActionPerformed
 
     /**
      * @param args the command line arguments
@@ -265,12 +306,17 @@ public class ListePreConv extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ListePreConv().setVisible(true);
+                try {
+                    new ListePreConv().setVisible(true);
+                } catch (NamingException ex) {
+                    Logger.getLogger(ListePreConv.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bMaj;
     private javax.swing.JButton bOuvrirRefusees;
     private javax.swing.JButton bPuOk;
     private javax.swing.JLabel jLabel1;
