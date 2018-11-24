@@ -24,6 +24,7 @@ public class ServiceJuridique {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws NamingException, JMSException, ParseException {
+        //Tests date
         /*DateConvention dDeb, dFin;
         /*dDeb = new DateConvention("01/06/2018");
         dFin = new DateConvention("01/07/2018");
@@ -54,6 +55,7 @@ public class ServiceJuridique {
         System.out.println("Plus de 6 mois");
         System.out.println(ServiceJuridique.estBonneDuree(dDeb,dFin));*/
         
+        //test receiver
         ServiceJuridique j = new ServiceJuridique();
         j.recevoir();
     }
@@ -74,12 +76,8 @@ public class ServiceJuridique {
         Session session = null;
         MessageConsumer receiver = null;
         
-        //Toutes les connections sont gérées par le serveur
-        //A dégager 
+        //Toutes les connections sont gérées par le serveur 
         try {
-            // create the JNDI initial context
-            //context = new InitialContext();
-
             // look up the ConnectionFactory
             factory = (ConnectionFactory) context.lookup(factoryName);
 
