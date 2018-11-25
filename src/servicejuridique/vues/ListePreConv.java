@@ -256,7 +256,7 @@ public class ListePreConv extends javax.swing.JFrame {
 
     private void bMajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bMajActionPerformed
         try {
-            s = new ServiceJuridique();
+            s = new ServiceJuridique(conv);
         } catch (NamingException ex) {
             Logger.getLogger(ListePreConv.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -265,11 +265,16 @@ public class ListePreConv extends javax.swing.JFrame {
         //} catch (NamingException ex) {
         //    Logger.getLogger(ListePreConv.class.getName()).log(Level.SEVERE, null, ex);
         //}
+        // On supprime toutes les lignes du tableau pour le mettre à jour avec les nouvelles valeurs
+        DefaultTableModel model = (DefaultTableModel) this.tabAValider.getModel();
+        for(int j = 0; j < model.getRowCount(); j++){
+            model.removeRow(j);
+        }
         ((DefaultTableModel) this.tabAValider.getModel()).setRowCount(conv.size());
         
         this.tabAValider.getColumn(tabAValider.getColumnName(0)).setMinWidth(45);
         this.tabAValider.getColumn(tabAValider.getColumnName(0)).setMaxWidth(60);
-        
+        System.out.println("HashMap : " + conv);
         int i = 0;
         for(PreConvention c : conv.values()){
             this.tabAValider.setValueAt(c.getId(), i, 0);
