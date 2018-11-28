@@ -1,5 +1,8 @@
 package servicejuridique;
 
+//il nous faut une hashmap des conv traitées, et celles là les supprimer de la liste dans la map
+
+
 import com.google.gson.Gson;
 import java.text.ParseException;
 import javax.jms.Connection;
@@ -104,7 +107,7 @@ public class ServiceJuridique {
         String destName = "PreConvention";
         Destination dest = null;
         //nombre de messages que l'on reçoit
-        int count = 1;
+        int count = 10;
         Session session = null;
         MessageConsumer receiver = null;
         
@@ -279,7 +282,7 @@ public class ServiceJuridique {
         ConnectionFactory factory = null;
         Connection connection = null;
         String factoryName = "jms/__defaultConnectionFactory";
-        String destName = "ConventionEnCours";
+        String destName = "ConventionEnCours2";
         Destination dest = null;
         int count = 1;
         Session session = null;
@@ -315,7 +318,7 @@ public class ServiceJuridique {
                     message.setObject(pc);
                     sender.send(message);
                     
-                    //System.out.println("Sent: " + message.getObject() );
+                    System.out.println("Sent: " + message.getObject() + "\n est valide " + pc.estValide());
                 //}
                 //Thread.sleep(1000);
           //  }

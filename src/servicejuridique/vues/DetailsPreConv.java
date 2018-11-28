@@ -6,7 +6,9 @@
 package servicejuridique.vues;
 
 import donnes.date.DateConvention;
+import donnes.preconvention.PreConvention;
 import java.awt.Color;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.NamingException;
@@ -19,7 +21,7 @@ import servicejuridique.ServiceJuridique;
 public class DetailsPreConv extends javax.swing.JFrame {
     private ListePreConv fenMere;
     private Long pc;
-    private boolean validite;
+    //private boolean validite;
 
     /**
      * Creates new form DetailsPreConv
@@ -28,7 +30,7 @@ public class DetailsPreConv extends javax.swing.JFrame {
      */
     public DetailsPreConv(ListePreConv fenMere, Long pc) {
         initComponents();
-        this.validite = true;
+        //this.validite = true;
         this.fenMere = fenMere;
         this.pc = pc;
         this.lNomPrenomEntreprise.setText("de " + this.fenMere.getConv().get(pc).getEtudiant().getPrenom() + " " + this.fenMere.getConv().get(pc).getEtudiant().getNom() + " à " + this.fenMere.getConv().get(pc).getEntreprise());
@@ -42,10 +44,9 @@ public class DetailsPreConv extends javax.swing.JFrame {
         String duree = DateConvention.nbMois(dDeb.getDate(), dFin.getDate()) + " mois " + DateConvention.nbJours(dDeb.getDate(), dFin.getDate()) + " jours";
         this.tfDuree.setText(duree);
         
-        //Ne marche pas pour l'instant
         if(DateConvention.nbMois(dDeb.getDate(), dFin.getDate())>6 || (DateConvention.nbMois(dDeb.getDate(), dFin.getDate()) == 6 && DateConvention.nbJours(dDeb.getDate(), dFin.getDate()) > 0)){
             this.tfDuree.setForeground(Color.red);
-            this.validite = false;
+            //this.validite = false;
         }
             
         
@@ -497,13 +498,33 @@ public class DetailsPreConv extends javax.swing.JFrame {
     }//GEN-LAST:event_bAssurVerifierActionPerformed
 
     private void bValiderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bValiderActionPerformed
-        //On peut dégager les deux boutons "vérifier" et récupérer le code;
-        //ServiceJuridique con = new ServiceJuridique();
-        /*try {
+        PreConvention p = this.fenMere.getConv().get(pc);
+        //try {
+            //On peut dégager les deux boutons "vérifier" et récupérer le code;
+            //ServiceJuridique con = new ServiceJuridique();
+            /*try {
             con.envoyer(this.fenMere.getConv().get(pc), validite);
-        } catch (NamingException ex) {
+            } catch (NamingException ex) {
+            Logger.getLogger(DetailsPreConv.class.getName()).log(Level.SEVERE, null, ex);
+            }*/
+            
+            /*if(!this.fenMere.getS().aExistenceJuridique(p.getNumEntreprise()))
+                p.setValidite(false);
+            else if(!this.fenMere.getS().aAssuranceValide(p.getEtudiant().getAssurance(), p.getEtudiant().getContrat(), p.getDateDeb(), p.getDateFin()))
+                p.setValidite(false);
+            else */
+            if(!this.fenMere.getS().estBonneDuree(p.getDateDeb(), p.getDateFin())){
+                p.setValidite(false);
+            }
+        /*} catch (IOException ex) {
             Logger.getLogger(DetailsPreConv.class.getName()).log(Level.SEVERE, null, ex);
         }*/
+        try {
+            this.fenMere.getS().envoyer(p, p.estValide());
+            this.dispose();
+        } catch (NamingException | InterruptedException ex) {
+            Logger.getLogger(DetailsPreConv.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_bValiderActionPerformed
 
     /**

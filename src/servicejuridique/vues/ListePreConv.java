@@ -65,6 +65,16 @@ public class ListePreConv extends javax.swing.JFrame {
         }*/ 
     }
 
+    public ServiceJuridique getS() {
+        return s;
+    }
+
+    public void setS(ServiceJuridique s) {
+        this.s = s;
+    }
+
+    
+    
     public HashMap<Long, PreConvention> getConv() {
         return s.getConv();
     }
@@ -261,7 +271,15 @@ public class ListePreConv extends javax.swing.JFrame {
             Logger.getLogger(ListePreConv.class.getName()).log(Level.SEVERE, null, ex);
         }
         //try {
+        
+            //Refaire ce traitement avec une hashmap des conv "traitées" valides ou non, pour les tej de l'affichage
+            
             conv = s.getConv();
+            HashMap<Long, PreConvention> convAJour = conv;
+            for(PreConvention p : convAJour.values())
+                if(!p.estValide())
+                    convAJour.remove(p.getId());
+            
         //} catch (NamingException ex) {
         //    Logger.getLogger(ListePreConv.class.getName()).log(Level.SEVERE, null, ex);
         //}
@@ -270,13 +288,14 @@ public class ListePreConv extends javax.swing.JFrame {
         for(int j = 0; j < model.getRowCount(); j++){
             model.removeRow(j);
         }
-        ((DefaultTableModel) this.tabAValider.getModel()).setRowCount(conv.size());
+        
+        ((DefaultTableModel) this.tabAValider.getModel()).setRowCount(convAJour.size());
         
         this.tabAValider.getColumn(tabAValider.getColumnName(0)).setMinWidth(45);
         this.tabAValider.getColumn(tabAValider.getColumnName(0)).setMaxWidth(60);
-        System.out.println("HashMap : " + conv);
+        System.out.println("HashMap : " + convAJour);
         int i = 0;
-        for(PreConvention c : conv.values()){
+        for(PreConvention c : convAJour.values()){
             this.tabAValider.setValueAt(c.getId(), i, 0);
             this.tabAValider.setValueAt(c.getEtudiant().getNom(), i, 1);
             this.tabAValider.setValueAt(c.getEtudiant().getPrenom(), i, 2);
