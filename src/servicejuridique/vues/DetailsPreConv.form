@@ -39,7 +39,7 @@
               <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="27" max="32767" attributes="0"/>
+              <EmptySpace pref="33" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="bValider" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="bAnnule" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -257,7 +257,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel14">
               <Properties>
-                <Property name="text" type="java.lang.String" value="- Que la p&#xe9;riode ne s&apos;&#xe9;tale pas sur deux ann&#xe9;es de Fac"/>
+                <Property name="text" type="java.lang.String" value="- Que la p&#xe9;riode ne s&apos;&#xe9;tale pas sur deux ann&#xe9;es"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tfGratification">
@@ -283,28 +283,21 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="jLabel16" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="tfSIREN" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Component id="tfEntNom" max="32767" attributes="0"/>
-                                  </Group>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="jLabel16" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="tfSIREN" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Component id="bEntVerifier" min="-2" max="-2" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="tfEntNom" max="32767" attributes="0"/>
+                              </Group>
                           </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          </Group>
+                          <Component id="jLabel10" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -321,7 +314,6 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel16" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="tfSIREN" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="bEntVerifier" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -355,14 +347,6 @@
                 <Property name="text" type="java.lang.String" value="numSIREN"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="bEntVerifier">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="V&#xe9;rifier"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bEntVerifierActionPerformed"/>
-              </Events>
-            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="jPanel4">
@@ -380,13 +364,8 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jLabel17" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel18" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          </Group>
+                          <Component id="jLabel17" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel18" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="jLabel20" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -397,11 +376,9 @@
                                   <Component id="tfAssurNumContrat" max="32767" attributes="0"/>
                                   <Component id="tfAssurNom" max="32767" attributes="0"/>
                               </Group>
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Component id="bAssurVerifier" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -420,7 +397,6 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel20" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="tfAssurNumContrat" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="bAssurVerifier" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -458,14 +434,6 @@
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="text" type="java.lang.String" value="nomAssur"/>
               </Properties>
-            </Component>
-            <Component class="javax.swing.JButton" name="bAssurVerifier">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="V&#xe9;rifier"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bAssurVerifierActionPerformed"/>
-              </Events>
             </Component>
           </SubComponents>
         </Container>

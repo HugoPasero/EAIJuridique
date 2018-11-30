@@ -90,7 +90,6 @@ public class DetailsPreConv extends javax.swing.JFrame {
         jLabel16 = new javax.swing.JLabel();
         tfEntNom = new javax.swing.JTextField();
         tfSIREN = new javax.swing.JTextField();
-        bEntVerifier = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jLabel17 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
@@ -98,7 +97,6 @@ public class DetailsPreConv extends javax.swing.JFrame {
         jLabel20 = new javax.swing.JLabel();
         tfAssurNumContrat = new javax.swing.JTextField();
         tfAssurNom = new javax.swing.JTextField();
-        bAssurVerifier = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
@@ -151,7 +149,7 @@ public class DetailsPreConv extends javax.swing.JFrame {
 
         jLabel13.setText("- Que la gratification soit conforme");
 
-        jLabel14.setText("- Que la période ne s'étale pas sur deux années de Fac");
+        jLabel14.setText("- Que la période ne s'étale pas sur deux années");
 
         tfGratification.setEditable(false);
         tfGratification.setText("jTextField1");
@@ -233,13 +231,6 @@ public class DetailsPreConv extends javax.swing.JFrame {
         tfSIREN.setEditable(false);
         tfSIREN.setText("numSIREN");
 
-        bEntVerifier.setText("Vérifier");
-        bEntVerifier.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bEntVerifierActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -247,22 +238,17 @@ public class DetailsPreConv extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel16)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tfSIREN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel9)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(tfEntNom)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(bEntVerifier))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel10)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                            .addComponent(jLabel16)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(tfSIREN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                            .addComponent(jLabel9)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(tfEntNom)))
+                    .addComponent(jLabel10))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -275,8 +261,7 @@ public class DetailsPreConv extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel16)
-                    .addComponent(tfSIREN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(bEntVerifier)))
+                    .addComponent(tfSIREN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Assurance"));
@@ -295,13 +280,6 @@ public class DetailsPreConv extends javax.swing.JFrame {
         tfAssurNom.setEditable(false);
         tfAssurNom.setText("nomAssur");
 
-        bAssurVerifier.setText("Vérifier");
-        bAssurVerifier.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bAssurVerifierActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -309,11 +287,8 @@ public class DetailsPreConv extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel17)
-                            .addComponent(jLabel18))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jLabel17)
+                    .addComponent(jLabel18)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel20)
@@ -321,10 +296,8 @@ public class DetailsPreConv extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(tfAssurNumContrat)
-                            .addComponent(tfAssurNom))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(bAssurVerifier)))
-                .addContainerGap())
+                            .addComponent(tfAssurNom))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -339,8 +312,7 @@ public class DetailsPreConv extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel20)
-                    .addComponent(tfAssurNumContrat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(bAssurVerifier)))
+                    .addComponent(tfAssurNumContrat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -470,7 +442,7 @@ public class DetailsPreConv extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(bValider)
                     .addComponent(bAnnule)))
@@ -486,16 +458,6 @@ public class DetailsPreConv extends javax.swing.JFrame {
     private void bAnnuleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bAnnuleActionPerformed
         this.dispose();
     }//GEN-LAST:event_bAnnuleActionPerformed
-
-    private void bEntVerifierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEntVerifierActionPerformed
-        //Si rest pas ok
-        //this.validite = false;
-    }//GEN-LAST:event_bEntVerifierActionPerformed
-
-    private void bAssurVerifierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bAssurVerifierActionPerformed
-        //Si rest pas ok
-        //this.validite = false;
-    }//GEN-LAST:event_bAssurVerifierActionPerformed
 
     private void bValiderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bValiderActionPerformed
         PreConvention p = this.fenMere.getConv().get(pc);
@@ -568,8 +530,6 @@ public class DetailsPreConv extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bAnnule;
-    private javax.swing.JButton bAssurVerifier;
-    private javax.swing.JButton bEntVerifier;
     private javax.swing.JButton bValider;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
