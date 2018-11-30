@@ -461,26 +461,19 @@ public class DetailsPreConv extends javax.swing.JFrame {
 
     private void bValiderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bValiderActionPerformed
         PreConvention p = this.fenMere.getConv().get(pc);
-        //try {
-            //On peut dégager les deux boutons "vérifier" et récupérer le code;
-            //ServiceJuridique con = new ServiceJuridique();
-            /*try {
-            con.envoyer(this.fenMere.getConv().get(pc), validite);
-            } catch (NamingException ex) {
-            Logger.getLogger(DetailsPreConv.class.getName()).log(Level.SEVERE, null, ex);
-            }*/
-            
-            /*if(!this.fenMere.getS().aExistenceJuridique(p.getNumEntreprise()))
+
+        try {            
+            if(!this.fenMere.getS().aExistenceJuridique(p.getNumEntreprise()))
                 p.setValidite(false);
             else if(!this.fenMere.getS().aAssuranceValide(p.getEtudiant().getAssurance(), p.getEtudiant().getContrat(), p.getDateDeb(), p.getDateFin()))
                 p.setValidite(false);
-            else */
-            if(!this.fenMere.getS().estBonneDuree(p.getDateDeb(), p.getDateFin())){
-                p.setValidite(false);
-            }
-        /*} catch (IOException ex) {
+            else
+                if(!this.fenMere.getS().estBonneDuree(p.getDateDeb(), p.getDateFin()))
+                    p.setValidite(false);
+        } catch (IOException ex) {
             Logger.getLogger(DetailsPreConv.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
+        }
+
         try {
             this.fenMere.getS().envoyer(p, p.estValide());
             this.fenMere.getConvTraitees().putIfAbsent(pc, p);

@@ -1,8 +1,5 @@
 package servicejuridique;
 
-//il nous faut une hashmap des conv traitées, et celles là les supprimer de la liste dans la map
-
-
 import com.google.gson.Gson;
 import java.text.ParseException;
 import javax.jms.Connection;
@@ -20,8 +17,6 @@ import donnes.preconvention.PreConvention;
 import java.util.HashMap;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.jms.MessageProducer;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -33,7 +28,24 @@ import sources.siren.Records;
 import sources.siren.SirenPOJO;
 
 /**
- *
+ * Le service juridique de l’université pour sa part doit valider trois éléments concernant le
+ * contexte du stage. :
+ *      Ø Le fait que la durée du stage (6 mois maximum) et le montant de la gratification sont
+ *      conformes à la loi en vigueur, et que la période envisagée ne s’étale pas sur deux années
+ *      universitaires.
+ *      Ø Le fait que l’entreprise/institution d’accueil a une existence juridique. On suppose
+ *      l’existence d’un service gouvernemental qui permet à partir d’un numéro (ex. SIREN)
+ *      et d’un intitulé d’entreprise/institution de vérifier si celle-ci existe bien juridiquement
+ *      ou non.
+ *      Pour la maquette demandée, ce service vous sera fourni (avec une interface similaire à
+ *      l’API proposée par https://opendata.datainfogreffe.fr/api/v1/documentation).
+ *      Ø Le fait que l’étudiant dispose bien d’un contrat d’assurance de responsabilité civile. On
+ *      fera la même hypothèse que précédemment : on suppose que chaque compagnie
+ *      d’assurance offre un service qui, à partir d’un nom de personne, d’un numéro de contrat
+ *      et d’une période, vérifie la validité du contrat d’assurance pour cette période.
+ * 
+ * De ces trois vérifications, dépendra l’autorisation juridique donnée au service des stages
+ * d’établir la convention de stage.
  * @author marieroca
  */
 public class ServiceJuridique {
@@ -93,17 +105,17 @@ public class ServiceJuridique {
      */
     public static void main(String[] args) throws NamingException, JMSException, ParseException {        
         //test receiver
-        ServiceJuridique j = new ServiceJuridique(null, null);
-        try {
+        //ServiceJuridique j = new ServiceJuridique(null, null);
+        //try {
         //j.recevoir();
         //System.out.println(j.aExistenceJuridique("552100554"));
         //} catch (IOException ex) {
         //Logger.getLogger(ServiceJuridique.class.getName()).log(Level.SEVERE, null, ex);
         //}
-            System.out.println(j.aExistenceJuridique(""));
-        } catch (IOException ex) {
-            Logger.getLogger(ServiceJuridique.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        //    System.out.println(j.aExistenceJuridique(""));
+        //} catch (IOException ex) {
+        //    Logger.getLogger(ServiceJuridique.class.getName()).log(Level.SEVERE, null, ex);
+        //}
     }
     
     /**
@@ -276,6 +288,8 @@ public class ServiceJuridique {
      * @param dateFin date de fin de la période de stage
      * @return true si le contrat est valide/ false si inexistant ou non valide
      */
+    
+    //Faire arraylist et chercher dedans sisi t'as uv
     public boolean aAssuranceValide(String compagnie, String numAssurance, DateConvention dateDeb, DateConvention dateFin){
         //tester si l'étudiant a bien le contrat numAssurance auprès de compagnie sur la période dateDeb-dateFin
         //Faire API en node qui retourne tout le temps true
