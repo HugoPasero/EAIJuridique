@@ -521,6 +521,10 @@ public class DetailsPreConv extends javax.swing.JFrame {
         }*/
         try {
             this.fenMere.getS().envoyer(p, p.estValide());
+            this.fenMere.getConvTraitees().putIfAbsent(pc, p);
+            System.out.println("Convtraitées : " + this.fenMere.getS().getConvTraitees());
+            this.fenMere.getConv().remove(pc);
+            System.out.println("Conv : " + this.fenMere.getS().getConv());
             this.dispose();
         } catch (NamingException | InterruptedException ex) {
             Logger.getLogger(DetailsPreConv.class.getName()).log(Level.SEVERE, null, ex);

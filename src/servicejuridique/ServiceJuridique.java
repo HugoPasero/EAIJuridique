@@ -38,17 +38,23 @@ import sources.siren.SirenPOJO;
  */
 public class ServiceJuridique {
     private HashMap<Long, PreConvention> conv;
+    private HashMap<Long, PreConvention> convTraitees;
 
     /**
      * Constructeur du service juridique
      * @param conv map des pré conventions en cours
      * @throws NamingException 
      */
-    public ServiceJuridique(HashMap<Long, PreConvention> conv) throws NamingException {
+    public ServiceJuridique(HashMap<Long, PreConvention> conv, HashMap<Long, PreConvention> convTraitees) throws NamingException {
             if (conv == null){
                 this.conv = new HashMap();
             }else{
                 this.conv = conv;
+            }
+            if (convTraitees == null){
+                this.convTraitees = new HashMap();
+            }else{
+                this.convTraitees = convTraitees;
             }
             //this.conv = new HashMap();
             this.recevoir();      
@@ -68,6 +74,14 @@ public class ServiceJuridique {
      */
     public void setConv(HashMap<Long, PreConvention> conv) {
         this.conv = conv;
+    }
+
+    public HashMap<Long, PreConvention> getConvTraitees() {
+        return convTraitees;
+    }
+
+    public void setConvTraitees(HashMap<Long, PreConvention> convTraitees) {
+        this.convTraitees = convTraitees;
     }
     
     /**
@@ -94,7 +108,7 @@ public class ServiceJuridique {
      * @return map (id, pré convention)
      * @throws NamingException 
      */
-    public HashMap<Long, PreConvention> recevoir() throws NamingException{
+    public void recevoir() throws NamingException{
         //System.setProperty
         System.setProperty("java.naming.factory.initial", "com.sun.enterprise.naming.SerialInitContextFactory");
         System.setProperty("org.omg.CORBA.ORBInitialHost", "127.0.0.1");
@@ -145,7 +159,7 @@ public class ServiceJuridique {
                     if (preconvention instanceof PreConvention) {
                         PreConvention convention = (PreConvention) preconvention;
                         
-                        if(!conv.containsKey(convention.getId()))
+                        if(!conv.containsKey(convention.getId()) && !convTraitees.containsKey(convention.getId()))
                             conv.put(convention.getId(), convention);
                         //Remplacer ci-dessous et afficher dans l'interface graphique
                         //System.out.println("Received: " + convention + " " + message.getStringProperty("date"));
@@ -180,7 +194,6 @@ public class ServiceJuridique {
                 }
             }
         }
-        return conv;
     }
     
     /**

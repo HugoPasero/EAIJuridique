@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package servicejuridique.vues;
 
 import donnes.preconvention.PreConvention;
@@ -20,49 +15,14 @@ import servicejuridique.ServiceJuridique;
 public class ListePreConv extends javax.swing.JFrame {
     private ServiceJuridique s;
     private HashMap<Long, PreConvention> conv;
+    private HashMap<Long, PreConvention> convTraitees;
 
     /**
      * Creates new form Juridique
+     * @throws javax.naming.NamingException
      */
     public ListePreConv() throws NamingException {
         initComponents();
-        
-        //s = new ServiceJuridique();
-        //conv = s.recevoir();
-        /*Diplome d = new Diplome(1L, Diplome.Niveau.M2, "MIAGE");
-        Etudiant e1 = new Etudiant(1L, "Murillo--Cantié", "Emma", "MAIF", "maif1", d);
-        Etudiant e2 = new Etudiant(2L, "Pasero", "Hugo", "MAIF", "maif2", d);
-        Etudiant e3 = new Etudiant(3L, "Roca", "Marie", "MAAF", "maaf1", d);
-        
-        try {
-            PreConvention p1 = new PreConvention(1L, new DateConvention("01/06/2018"), new DateConvention("31/08/2018"), 1200.0F, "Chargé d'affaire", "Sharepoint", "ENEDIS GRDF", "François Guiraud", "ERDF1234", e1);
-            PreConvention p2 = new PreConvention(2L, new DateConvention("01/06/2018"), new DateConvention("31/08/2018"), 1100.0F, "Développeur", "Web", "Banque populaire", "M. Jean-Claude", "BP1234", e2);
-            PreConvention p3 = new PreConvention(3L, new DateConvention("01/06/2016"), new DateConvention("31/08/2018"), 1150.0F, "Assistance MOA", "Tuleap", "Orange", "Aurélie", "O1234", e3);
-            conv.put(p1.getId(),p1);
-            //System.out.print(p1.getId());
-            conv.put(p2.getId(),p2);
-            //System.out.print(p2.getId());
-            conv.put(p3.getId(),p3);
-            //System.out.print(p3.getId());
-        } catch (ParseException ex) {
-            Logger.getLogger(ListePreConv.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
-        
-        //ArrayList<PreConvention> pc = new ArrayList(conv.values());
-
-        /*((DefaultTableModel) this.tabAValider.getModel()).setRowCount(s.getConv().size());
-        
-        this.tabAValider.getColumn(tabAValider.getColumnName(0)).setMinWidth(45);
-        this.tabAValider.getColumn(tabAValider.getColumnName(0)).setMaxWidth(60);
-        
-        int i = 0;
-        for(PreConvention c : s.getConv().values()){
-            this.tabAValider.setValueAt(c.getId(), i, 0);
-            this.tabAValider.setValueAt(c.getEtudiant().getNom(), i, 1);
-            this.tabAValider.setValueAt(c.getEtudiant().getPrenom(), i, 2);
-            this.tabAValider.setValueAt(c.getEntreprise(), i, 3);
-            i++;
-        }*/ 
     }
 
     public ServiceJuridique getS() {
@@ -73,7 +33,13 @@ public class ListePreConv extends javax.swing.JFrame {
         this.s = s;
     }
 
-    
+    public HashMap<Long, PreConvention> getConvTraitees() {
+        return convTraitees;
+    }
+
+    public void setConvTraitees(HashMap<Long, PreConvention> convTraitees) {
+        this.convTraitees = convTraitees;
+    }
     
     public HashMap<Long, PreConvention> getConv() {
         return s.getConv();
@@ -266,19 +232,22 @@ public class ListePreConv extends javax.swing.JFrame {
 
     private void bMajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bMajActionPerformed
         try {
-            s = new ServiceJuridique(conv);
+            //HashMap<Long, PreConvention> traitees = s.getConvTraitees();
+            s = new ServiceJuridique(conv, convTraitees);
         } catch (NamingException ex) {
             Logger.getLogger(ListePreConv.class.getName()).log(Level.SEVERE, null, ex);
         }
         //try {
         
             //Refaire ce traitement avec une hashmap des conv "traitées" valides ou non, pour les tej de l'affichage
-            
+            convTraitees = s.getConvTraitees();
             conv = s.getConv();
-            HashMap<Long, PreConvention> convAJour = conv;
+            
+            /*convTraitees = s.getConvTraitees();
+            //HashMap<Long, PreConvention> convAJour = conv;
             for(PreConvention p : convAJour.values())
-                if(!p.estValide())
-                    convAJour.remove(p.getId());
+                if(convTraitees.containsKey(p.getId()))
+                    convAJour.remove(p.getId());*/
             
         //} catch (NamingException ex) {
         //    Logger.getLogger(ListePreConv.class.getName()).log(Level.SEVERE, null, ex);
@@ -289,13 +258,13 @@ public class ListePreConv extends javax.swing.JFrame {
             model.removeRow(j);
         }
         
-        ((DefaultTableModel) this.tabAValider.getModel()).setRowCount(convAJour.size());
+        ((DefaultTableModel) this.tabAValider.getModel()).setRowCount(conv.size());
         
         this.tabAValider.getColumn(tabAValider.getColumnName(0)).setMinWidth(45);
         this.tabAValider.getColumn(tabAValider.getColumnName(0)).setMaxWidth(60);
-        System.out.println("HashMap : " + convAJour);
+        System.out.println("HashMap : " + conv);
         int i = 0;
-        for(PreConvention c : convAJour.values()){
+        for(PreConvention c : conv.values()){
             this.tabAValider.setValueAt(c.getId(), i, 0);
             this.tabAValider.setValueAt(c.getEtudiant().getNom(), i, 1);
             this.tabAValider.setValueAt(c.getEtudiant().getPrenom(), i, 2);
