@@ -91,15 +91,19 @@ public class ServiceJuridique {
      * @throws javax.jms.JMSException
      * @throws java.text.ParseException
      */
-    public static void main(String[] args) throws NamingException, JMSException, ParseException {
+    public static void main(String[] args) throws NamingException, JMSException, ParseException {        
         //test receiver
-        //ServiceJuridique j = new ServiceJuridique(null);
-        //try {
-            //j.recevoir();
-            //System.out.println(j.aExistenceJuridique("552100554"));
+        ServiceJuridique j = new ServiceJuridique(null, null);
+        try {
+        //j.recevoir();
+        //System.out.println(j.aExistenceJuridique("552100554"));
         //} catch (IOException ex) {
-            //Logger.getLogger(ServiceJuridique.class.getName()).log(Level.SEVERE, null, ex);
+        //Logger.getLogger(ServiceJuridique.class.getName()).log(Level.SEVERE, null, ex);
         //}
+            System.out.println(j.aExistenceJuridique(""));
+        } catch (IOException ex) {
+            Logger.getLogger(ServiceJuridique.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     /**
