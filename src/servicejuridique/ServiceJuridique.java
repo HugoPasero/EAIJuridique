@@ -17,6 +17,8 @@ import donnes.preconvention.PreConvention;
 import java.util.HashMap;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.jms.MessageProducer;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -51,6 +53,9 @@ import sources.siren.SirenPOJO;
 public class ServiceJuridique {
     private HashMap<Long, PreConvention> conv;
     private HashMap<Long, PreConvention> convTraitees;
+    static MessageConsumer receiver = null;
+    static MessageProducer sender = null;
+    static Session session = null;
 
     /**
      * Constructeur du service juridique
@@ -118,14 +123,8 @@ public class ServiceJuridique {
         //}
     }
     
-    /**
-     * Méthode permettant de recevoir les messages JMS emits par le serveur web (préconventions à valider)
-     * via le sujet de discussion "PreConvention"
-     * @return map (id, pré convention)
-     * @throws NamingException 
-     */
-    public void recevoir() throws NamingException{
-        //System.setProperty
+
+    static public void init() throws NamingException, JMSException {
         System.setProperty("java.naming.factory.initial", "com.sun.enterprise.naming.SerialInitContextFactory");
         System.setProperty("org.omg.CORBA.ORBInitialHost", "127.0.0.1");
         System.setProperty("org.omg.CORBA.ORBInitialPort", "3700");
@@ -136,13 +135,9 @@ public class ServiceJuridique {
         String factoryName = "jms/__defaultConnectionFactory";
         String destName = "PreConvention";
         Destination dest = null;
-        //nombre de messages que l'on reçoit
-        int count = 10;
-        Session session = null;
-        MessageConsumer receiver = null;
         
         //Toutes les connections sont gérées par le serveur 
-        try {
+
             // look up the ConnectionFactory
             factory = (ConnectionFactory) context.lookup(factoryName);
 
@@ -159,13 +154,31 @@ public class ServiceJuridique {
             // create the receiver
             //je veux recevoir toutes les conventions
             receiver = session.createConsumer(dest);
+            
+            destName = "ConventionEnCours2";
 
+            // look up the Destination
+            dest = (Destination) context.lookup(destName);
+
+            // create the sender
+            sender = session.createProducer(dest);
+            
             // start the connection, to enable message receipt
             connection.start();
-
-            //while(true) {
-            for(int i = 0; i < count; ++i){
-                Message message = receiver.receive();
+    }
+    
+    /**
+     * Méthode permettant de recevoir les messages JMS emits par le serveur web (préconventions à valider)
+     * via le sujet de discussion "PreConvention"
+     * @return map (id, pré convention)
+     * @throws NamingException 
+     */
+    public void recevoir() throws NamingException {
+        //System.setProperty
+        try {
+            while(true) {
+            //for(int i = 0; i < 10; ++i){
+                Message message = receiver.receiveNoWait();
                 if (message instanceof ObjectMessage) {
                     //on récupère le message
                     ObjectMessage flux = (ObjectMessage) message;
@@ -174,42 +187,42 @@ public class ServiceJuridique {
                     //on récupère la pré-conv dans l'objet
                     if (preconvention instanceof PreConvention) {
                         PreConvention convention = (PreConvention) preconvention;
-                        
                         if(!conv.containsKey(convention.getId()) && !convTraitees.containsKey(convention.getId()))
                             conv.put(convention.getId(), convention);
-                        //Remplacer ci-dessous et afficher dans l'interface graphique
-                        //System.out.println("Received: " + convention + " " + message.getStringProperty("date"));
-                        //return convention;
-                        
+                        else 
+                            break;
                     }
-
                 } else if (message != null) {
                     System.out.println("Pas de préconvention reçue");
                 }
             }
         } catch (JMSException exception) {
             exception.printStackTrace();
-        } catch (NamingException exception) {
-            exception.printStackTrace();
-        } finally {
-            // close the context
-            if (context != null) {
-                try {
-                    context.close();
-                } catch (NamingException exception) {
-                    exception.printStackTrace();
-                }
-            }
-
-            // close the connection
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (JMSException exception) {
-                    exception.printStackTrace();
-                }
-            }
         }
+    }
+    
+    /**
+     * Méthode permettant d'envoyer les messages JMS (préconventions validées ou refusées) du service juridique
+     * vers le service des stages via la file ConventionEnCours
+     * @param pc préconvention à envoyer
+     * @param validite statut de la validité de la préconvention
+     * @throws NamingException
+     * @throws InterruptedException 
+     */
+    public void envoyer(PreConvention pc) throws NamingException{
+
+        try {
+            //while(true){
+            //for (int i = 0; i < count; i++) {
+            ObjectMessage message = session.createObjectMessage();
+            message.setObject(pc);
+            sender.send(message);
+            
+            System.out.println("Sent: " + message.getObject() + "\n est valide " + pc.estValide());
+        } catch (JMSException ex) {
+            Logger.getLogger(ServiceJuridique.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
     
     /**
@@ -296,88 +309,8 @@ public class ServiceJuridique {
         return true;
     }
     
-    /**
-     * Méthode permettant d'envoyer les messages JMS (préconventions validées ou refusées) du service juridique
-     * vers le service des stages via la file ConventionEnCours
-     * @param pc préconvention à envoyer
-     * @param validite statut de la validité de la préconvention
-     * @throws NamingException
-     * @throws InterruptedException 
-     */
-    public void envoyer (PreConvention pc, boolean validite) throws NamingException, InterruptedException{
-        System.setProperty("java.naming.factory.initial","com.sun.enterprise.naming.SerialInitContextFactory"); 
-        System.setProperty("org.omg.CORBA.ORBInitialHost", "127.0.0.1");
-        System.setProperty("org.omg.CORBA.ORBInitialPort", "3700"); 
-        InitialContext context = new InitialContext();
-        
-        ConnectionFactory factory = null;
-        Connection connection = null;
-        String factoryName = "jms/__defaultConnectionFactory";
-        String destName = "ConventionEnCours2";
-        Destination dest = null;
-        int count = 1;
-        Session session = null;
-        MessageProducer sender = null;
-        
-        pc.setValidite(validite);
-        
-        try {
-            // create the JNDI initial context.
-            context = new InitialContext();
+    
 
-            // look up the ConnectionFactory
-            factory = (ConnectionFactory) context.lookup(factoryName);
-
-            // look up the Destination
-            dest = (Destination) context.lookup(destName);
-
-            // create the connection
-            connection = factory.createConnection();
-
-            // create the session
-            session = connection.createSession(
-                false, Session.AUTO_ACKNOWLEDGE);
-
-            // create the sender
-            sender = session.createProducer(dest);
-
-            // start the connection, to enable message sends
-            connection.start();
-            //while(true){
-                //for (int i = 0; i < count; i++) {
-                    ObjectMessage message = session.createObjectMessage();
-                    message.setObject(pc);
-                    sender.send(message);
-                    
-                    System.out.println("Sent: " + message.getObject() + "\n est valide " + pc.estValide());
-                //}
-                //Thread.sleep(1000);
-          //  }
-            
-        } catch (JMSException exception) {
-            exception.printStackTrace();
-        } catch (NamingException exception) {
-            exception.printStackTrace();
-        } finally {
-            // close the context
-            if (context != null) {
-                try {
-                    context.close();
-                } catch (NamingException exception) {
-                    exception.printStackTrace();
-                }
-            }
-
-            // close the connection
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (JMSException exception) {
-                    exception.printStackTrace();
-                }
-            }
-        }
-    }
     
     
     
