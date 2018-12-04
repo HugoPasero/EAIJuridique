@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package servicejuridique.vues;
 
 import donnes.date.DateConvention;
@@ -40,6 +35,7 @@ public class DetailsPreConv extends javax.swing.JFrame {
         DateConvention dFin = this.fenMere.getConv().get(pc).getDateFin();
         this.tfDateDeb.setText(dDeb.toString());
         this.tfDateFin.setText(dFin.toString());
+        //On affiche la durée sous le format "? mois et ? jours"
         String duree = DateConvention.nbMois(dDeb.getDate(), dFin.getDate()) + " mois " + DateConvention.nbJours(dDeb.getDate(), dFin.getDate()) + " jours";
         this.tfDuree.setText(duree);
         
@@ -452,6 +448,7 @@ public class DetailsPreConv extends javax.swing.JFrame {
      * @param evt 
      */
     private void bAnnuleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bAnnuleActionPerformed
+        this.fenMere.maj();
         this.dispose();
     }//GEN-LAST:event_bAnnuleActionPerformed
 
@@ -486,6 +483,7 @@ public class DetailsPreConv extends javax.swing.JFrame {
             this.fenMere.getConvTraitees().putIfAbsent(pc, p);
             this.fenMere.getConv().remove(pc);
             //On ferme la fenêtre
+            this.fenMere.maj();
             this.dispose();
         } catch (NamingException ex) {
             Logger.getLogger(DetailsPreConv.class.getName()).log(Level.SEVERE, null, ex);

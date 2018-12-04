@@ -65,6 +65,7 @@ public class ServiceJuridique {
      *      - que l'entreprise existe bien
      *      - que l'étudiant soit couvert par son assurance pour la période donnée
      * @param conv map des pré conventions en cours
+     * @param convTraitees liste des préconventions traitées par le service enseignement (validées ou refusées)
      * @throws NamingException 
      */
     public ServiceJuridique(HashMap<Long, PreConvention> conv, HashMap<Long, PreConvention> convTraitees) throws NamingException {
