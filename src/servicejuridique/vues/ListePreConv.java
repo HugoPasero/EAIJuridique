@@ -4,12 +4,14 @@ import donnes.preconvention.PreConvention;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.jms.JMSException;
 import javax.naming.NamingException;
 import javax.swing.table.DefaultTableModel;
 import servicejuridique.ServiceJuridique;
 
 /**
- *
+ * Fenêtre générale du service juridique permettant d'afficher la liste
+ * des préconventions à valider
  * @author marieroca
  */
 public class ListePreConv extends javax.swing.JFrame {
@@ -25,32 +27,46 @@ public class ListePreConv extends javax.swing.JFrame {
         initComponents();
     }
 
+    /**
+     * Getter du service juridique lié à la fenêtre
+     * @return service juridique
+     */
     public ServiceJuridique getS() {
         return s;
     }
 
+    /**
+     * Setter du service juridique lié à la fenêtre
+     * @param s 
+     */
     public void setS(ServiceJuridique s) {
         this.s = s;
     }
 
+    /**
+     * Getter de la map des preconventions traitées (validées ou refusées)
+     * @return la map(id, preconventions) des conventions traitées
+     */
     public HashMap<Long, PreConvention> getConvTraitees() {
         return convTraitees;
     }
 
+    /**
+     * Setter de la map des preconventions traitées (validées ou refusées)
+     * @param convTraitees map(id, preconventions) des conventions traitées
+     */
     public void setConvTraitees(HashMap<Long, PreConvention> convTraitees) {
         this.convTraitees = convTraitees;
     }
     
+    /**
+     * Getter de la map des preconventions à traiter
+     * @return la map(id, preconventions) des conventions à traiter
+     */
     public HashMap<Long, PreConvention> getConv() {
         return s.getConv();
     }
-
-    /*public void setConv(HashMap<Long, PreConvention> conv) {
-        s.getConv() = conv;
-    }*¨
-
-    
-    
+   
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -66,7 +82,7 @@ public class ListePreConv extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         tabNavigation = new javax.swing.JTabbedPane();
         jPanel3 = new javax.swing.JPanel();
-        bOuvrirRefusees = new javax.swing.JButton();
+        bOuvrir = new javax.swing.JButton();
         jScrollPane6 = new javax.swing.JScrollPane();
         tabAValider = new javax.swing.JTable();
         bMaj = new javax.swing.JButton();
@@ -107,6 +123,7 @@ public class ListePreConv extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Service Juridique - Préconventions");
 
         jLabel1.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         jLabel1.setText("Liste des pré-conventions à valider :");
@@ -114,16 +131,11 @@ public class ListePreConv extends javax.swing.JFrame {
         tabNavigation.setToolTipText("");
         tabNavigation.setName(""); // NOI18N
 
-        bOuvrirRefusees.setText("Ouvrir");
-        bOuvrirRefusees.setActionCommand("bOuvrir");
-        bOuvrirRefusees.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                bOuvrirRefuseesMouseClicked(evt);
-            }
-        });
-        bOuvrirRefusees.addActionListener(new java.awt.event.ActionListener() {
+        bOuvrir.setText("Ouvrir");
+        bOuvrir.setActionCommand("bOuvrir");
+        bOuvrir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bOuvrirRefuseesActionPerformed(evt);
+                bOuvrirActionPerformed(evt);
             }
         });
 
@@ -160,7 +172,7 @@ public class ListePreConv extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(0, 315, Short.MAX_VALUE)
-                .addComponent(bOuvrirRefusees))
+                .addComponent(bOuvrir))
             .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
@@ -168,7 +180,7 @@ public class ListePreConv extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(bOuvrirRefusees))
+                .addComponent(bOuvrir))
         );
 
         tabNavigation.addTab("À Valider", jPanel3);
@@ -206,7 +218,13 @@ public class ListePreConv extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void bOuvrirRefuseesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bOuvrirRefuseesActionPerformed
+    /**
+     * Évènement généré lors du clic sur "Ouvrir"
+     * Ouverture de la fenêtre de détails de la préconvention sélectionnée
+     * @see DetailsPreConv
+     * @param evt 
+     */
+    private void bOuvrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bOuvrirActionPerformed
         int[] lignes = tabAValider.getSelectedRows();
         //on ne peut modifier qu'une seule ligne
         //on teste donc combien de lignes sont sélectionnées et on retourne une pop-up d'info
@@ -214,44 +232,35 @@ public class ListePreConv extends javax.swing.JFrame {
         if(lignes.length > 1){
             this.puSelectionUnique.setVisible(true);
         } else {
-            //PreConvention con = (PreConvention) tabAValider.getValueAt(tabAValider.getSelectedRow(),0);
             Long key = (Long) tabAValider.getValueAt(tabAValider.getSelectedRow(), 0);
-            //PreConvention pc = conv.get(key);
+            //on ouvre la fenêtre des détails de la conv sélectionnée pour vérifier et valider/refuser
             DetailsPreConv fen = new DetailsPreConv(this, key);
             fen.setVisible(true);
         }
-    }//GEN-LAST:event_bOuvrirRefuseesActionPerformed
+    }//GEN-LAST:event_bOuvrirActionPerformed
 
-    private void bOuvrirRefuseesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bOuvrirRefuseesMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_bOuvrirRefuseesMouseClicked
-
+    /**
+     * Fermeture de la popup d'information "Selectionner qu'une seule ligne"
+     * @param evt 
+     */
     private void bPuOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bPuOkActionPerformed
         this.puSelectionUnique.dispose();
     }//GEN-LAST:event_bPuOkActionPerformed
 
+    /**
+     * Évènement généré lors du clic sur "Maj"
+     * Mise à jour de la liste des préconventions à traiter
+     * @param evt 
+     */
     private void bMajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bMajActionPerformed
         try {
-            //HashMap<Long, PreConvention> traitees = s.getConvTraitees();
             s = new ServiceJuridique(conv, convTraitees);
         } catch (NamingException ex) {
             Logger.getLogger(ListePreConv.class.getName()).log(Level.SEVERE, null, ex);
         }
-        //try {
-        
-            //Refaire ce traitement avec une hashmap des conv "traitées" valides ou non, pour les tej de l'affichage
-            convTraitees = s.getConvTraitees();
-            conv = s.getConv();
-            
-            /*convTraitees = s.getConvTraitees();
-            //HashMap<Long, PreConvention> convAJour = conv;
-            for(PreConvention p : convAJour.values())
-                if(convTraitees.containsKey(p.getId()))
-                    convAJour.remove(p.getId());*/
-            
-        //} catch (NamingException ex) {
-        //    Logger.getLogger(ListePreConv.class.getName()).log(Level.SEVERE, null, ex);
-        //}
+        convTraitees = s.getConvTraitees();
+        conv = s.getConv();
+         
         // On supprime toutes les lignes du tableau pour le mettre à jour avec les nouvelles valeurs
         DefaultTableModel model = (DefaultTableModel) this.tabAValider.getModel();
         for(int j = 0; j < model.getRowCount(); j++){
@@ -299,9 +308,15 @@ public class ListePreConv extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(ListePreConv.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        //</editor-fold>
 
-        ServiceJuridique.init();
+        try {
+            //Lancement de la connexion au serveur pour réceptionner et envoyer les JMS (préconventions)
+            ServiceJuridique.init();
+        } catch (NamingException ex) {
+            Logger.getLogger(ListePreConv.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JMSException ex) {
+            Logger.getLogger(ListePreConv.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -317,7 +332,7 @@ public class ListePreConv extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bMaj;
-    private javax.swing.JButton bOuvrirRefusees;
+    private javax.swing.JButton bOuvrir;
     private javax.swing.JButton bPuOk;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

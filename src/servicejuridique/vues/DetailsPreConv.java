@@ -15,13 +15,13 @@ import javax.naming.NamingException;
 import servicejuridique.ServiceJuridique;
 
 /**
- *
+ * Fenêtre des détails de la préconvention à valider 
+ * sélectionnée dans le service juridique 
  * @author marieroca
  */
 public class DetailsPreConv extends javax.swing.JFrame {
     private ListePreConv fenMere;
     private Long pc;
-    //private boolean validite;
 
     /**
      * Creates new form DetailsPreConv
@@ -30,7 +30,6 @@ public class DetailsPreConv extends javax.swing.JFrame {
      */
     public DetailsPreConv(ListePreConv fenMere, Long pc) {
         initComponents();
-        //this.validite = true;
         this.fenMere = fenMere;
         this.pc = pc;
         this.lNomPrenomEntreprise.setText("de " + this.fenMere.getConv().get(pc).getEtudiant().getPrenom() + " " + this.fenMere.getConv().get(pc).getEtudiant().getNom() + " à " + this.fenMere.getConv().get(pc).getEntreprise());
@@ -44,11 +43,11 @@ public class DetailsPreConv extends javax.swing.JFrame {
         String duree = DateConvention.nbMois(dDeb.getDate(), dFin.getDate()) + " mois " + DateConvention.nbJours(dDeb.getDate(), dFin.getDate()) + " jours";
         this.tfDuree.setText(duree);
         
+        //Si la durée du stage est supérieure à la durée légale (6 mois)
+        //On l'affiche visuellement (rouge)
         if(DateConvention.nbMois(dDeb.getDate(), dFin.getDate())>6 || (DateConvention.nbMois(dDeb.getDate(), dFin.getDate()) == 6 && DateConvention.nbJours(dDeb.getDate(), dFin.getDate()) > 0)){
             this.tfDuree.setForeground(Color.red);
-            //this.validite = false;
-        }
-            
+        }  
         
         this.tfAssurNom.setText(this.fenMere.getConv().get(pc).getEtudiant().getAssurance());
         this.tfAssurNumContrat.setText(this.fenMere.getConv().get(pc).getEtudiant().getContrat());
@@ -109,10 +108,11 @@ public class DetailsPreConv extends javax.swing.JFrame {
         bValider = new javax.swing.JButton();
         bAnnule = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Service Juridique - Détails");
 
         jLabel1.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        jLabel1.setText("Détails à valider de la pré-convetion");
+        jLabel1.setText("Détails à valider de la pré-convention");
 
         lNomPrenomEntreprise.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         lNomPrenomEntreprise.setText("de NOM Prénom à Entreprise");
@@ -134,11 +134,6 @@ public class DetailsPreConv extends javax.swing.JFrame {
 
         tfDateFin.setEditable(false);
         tfDateFin.setText("dateFin");
-        tfDateFin.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tfDateFinActionPerformed(evt);
-            }
-        });
 
         tfDuree.setEditable(false);
         tfDuree.setText("duree");
@@ -451,37 +446,48 @@ public class DetailsPreConv extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void tfDateFinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfDateFinActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tfDateFinActionPerformed
-
+    /**
+     * Évènement généré lors du clic sur "Annuler"
+     * Fermeture de la fenêtre
+     * @param evt 
+     */
     private void bAnnuleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bAnnuleActionPerformed
         this.dispose();
     }//GEN-LAST:event_bAnnuleActionPerformed
 
+    /**
+     * Évènement généré lors du clic sur "Valider"
+     * On envoie la préconvention vers le service des stage avec la bonne 
+     * validité (validée ou refusée)
+     * @param evt 
+     */
     private void bValiderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bValiderActionPerformed
         PreConvention p = this.fenMere.getConv().get(pc);
 
-        try {            
+        try {
+            //si l'entreprise n'existe pas => la préconvention n'est pas valide
             if(!this.fenMere.getS().aExistenceJuridique(p.getNumEntreprise()))
                 p.setValidite(false);
+            //si l'étudiant n'a pas de contrat d'assurance sur la période
+            //=> la préconvention n'est pas valide
             else if(!this.fenMere.getS().aAssuranceValide(p.getEtudiant().getAssurance(), p.getEtudiant().getContrat(), p.getDateDeb(), p.getDateFin()))
                 p.setValidite(false);
-            else
-                if(!this.fenMere.getS().estBonneDuree(p.getDateDeb(), p.getDateFin()))
+            //si la durée du stage n'est pas bonne => la préconvention n'est pas valide
+            else if(!ServiceJuridique.estBonneDuree(p.getDateDeb(), p.getDateFin()))
                     p.setValidite(false);
         } catch (IOException ex) {
             Logger.getLogger(DetailsPreConv.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         try {
-            this.fenMere.getS().envoyer(p, p.estValide());
+            //On envoie la préconvention au service des stages
+            this.fenMere.getS().envoyer(p);
+            //On bouge la préconvention de la liste des conventions à traiter vers les conventions traitées
             this.fenMere.getConvTraitees().putIfAbsent(pc, p);
-            System.out.println("Convtraitées : " + this.fenMere.getS().getConvTraitees());
             this.fenMere.getConv().remove(pc);
-            System.out.println("Conv : " + this.fenMere.getS().getConv());
+            //On ferme la fenêtre
             this.dispose();
-        } catch (NamingException | InterruptedException ex) {
+        } catch (NamingException ex) {
             Logger.getLogger(DetailsPreConv.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_bValiderActionPerformed

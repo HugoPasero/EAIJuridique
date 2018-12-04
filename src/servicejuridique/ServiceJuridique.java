@@ -1,7 +1,6 @@
 package servicejuridique;
 
 import com.google.gson.Gson;
-import java.text.ParseException;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
@@ -30,6 +29,7 @@ import sources.siren.Records;
 import sources.siren.SirenPOJO;
 
 /**
+ * Classe permettant de gérer un service juridique comme décrit ci-dessous.
  * Le service juridique de l’université pour sa part doit valider trois éléments concernant le
  * contexte du stage. :
  *      Ø Le fait que la durée du stage (6 mois maximum) et le montant de la gratification sont
@@ -48,6 +48,7 @@ import sources.siren.SirenPOJO;
  * 
  * De ces trois vérifications, dépendra l’autorisation juridique donnée au service des stages
  * d’établir la convention de stage.
+ * 
  * @author marieroca
  */
 public class ServiceJuridique {
@@ -58,72 +59,69 @@ public class ServiceJuridique {
     static Session session = null;
 
     /**
-     * Constructeur du service juridique
+     * Constructeur du service juridique qui réceptionne les préconvention envoyées par le serveur web
+     * Et qui s'occuppe de vérifier :
+     *      - que la durée du stage soit légale (6 mois max)
+     *      - que l'entreprise existe bien
+     *      - que l'étudiant soit couvert par son assurance pour la période donnée
      * @param conv map des pré conventions en cours
      * @throws NamingException 
      */
     public ServiceJuridique(HashMap<Long, PreConvention> conv, HashMap<Long, PreConvention> convTraitees) throws NamingException {
-            if (conv == null){
-                this.conv = new HashMap();
-            }else{
-                this.conv = conv;
-            }
-            if (convTraitees == null){
-                this.convTraitees = new HashMap();
-            }else{
-                this.convTraitees = convTraitees;
-            }
-            //this.conv = new HashMap();
-            this.recevoir();      
+        //Si la liste des préconvention en cours ou traitées sont nulles ont les instancie vides    
+        if (conv == null){
+            this.conv = new HashMap();
+        }else{
+            this.conv = conv;
+        }
+        if (convTraitees == null){
+            this.convTraitees = new HashMap();
+        }else{
+            this.convTraitees = convTraitees;
+        }
+        //On receptionne les préconvention envoyées par le serveur web
+        this.recevoir();      
     }
 
     /**
-     * Getter de la map des pré conventions
-     * @return map (id, pré convention)
+     * Getter de la map des pré conventions à traiter
+     * @return map (id, pré convention) à traiter
      */
     public HashMap<Long, PreConvention> getConv() {
         return conv;
     }
 
     /**
-     * Setter de la map des pré conventions
-     * @param conv map (id, pré convention)
+     * Setter de la map des pré conventions à traiter
+     * @param conv map (id, pré convention) à traiter
      */
     public void setConv(HashMap<Long, PreConvention> conv) {
         this.conv = conv;
     }
 
+    /**
+     * Getter de la map des pré conventions traitées
+     * @return map (id, pré convention) traitées
+     */
     public HashMap<Long, PreConvention> getConvTraitees() {
         return convTraitees;
     }
 
+    /**
+     * Setter de la map des pré conventions traitées
+     * @param conv map (id, pré convention) traitées
+     */
     public void setConvTraitees(HashMap<Long, PreConvention> convTraitees) {
         this.convTraitees = convTraitees;
-    }
-    
-    /**
-     * Le main nous a permit de tester les différentes méthodes implémentées
-     * @param args the command line arguments
-     * @throws javax.naming.NamingException
-     * @throws javax.jms.JMSException
-     * @throws java.text.ParseException
-     */
-    public static void main(String[] args) throws NamingException, JMSException, ParseException {        
-        //test receiver
-        //ServiceJuridique j = new ServiceJuridique(null, null);
-        //try {
-        //j.recevoir();
-        //System.out.println(j.aExistenceJuridique("552100554"));
-        //} catch (IOException ex) {
-        //Logger.getLogger(ServiceJuridique.class.getName()).log(Level.SEVERE, null, ex);
-        //}
-        //    System.out.println(j.aExistenceJuridique(""));
-        //} catch (IOException ex) {
-        //    Logger.getLogger(ServiceJuridique.class.getName()).log(Level.SEVERE, null, ex);
-        //}
-    }
-    
+    } 
 
+    /**
+     * Initialisation de la connexion : 
+     *      - au topic "Pré-convention" pour réceptionner les préconvention envoyées par le serveur web
+     *      - à la queue "Conventions en cours" pour envoyer les conventions traitées (validées ou refusées) au service des stages
+     * @throws NamingException
+     * @throws JMSException 
+     */
     static public void init() throws NamingException, JMSException {
         System.setProperty("java.naming.factory.initial", "com.sun.enterprise.naming.SerialInitContextFactory");
         System.setProperty("org.omg.CORBA.ORBInitialHost", "127.0.0.1");
@@ -133,38 +131,39 @@ public class ServiceJuridique {
         ConnectionFactory factory = null;
         Connection connection = null;
         String factoryName = "jms/__defaultConnectionFactory";
-        String destName = "PreConvention";
         Destination dest = null;
+
+        // look up the ConnectionFactory
+        factory = (ConnectionFactory) context.lookup(factoryName);
+
+        //Pour le receiver
+        String destName = "PreConvention";
         
-        //Toutes les connections sont gérées par le serveur 
+        // look up the Destination
+        dest = (Destination) context.lookup(destName);
 
-            // look up the ConnectionFactory
-            factory = (ConnectionFactory) context.lookup(factoryName);
+        // create the connection
+        connection = factory.createConnection();
 
-            // look up the Destination
-            dest = (Destination) context.lookup(destName);
+        // create the session
+        session = connection.createSession(
+                false, Session.AUTO_ACKNOWLEDGE);
 
-            // create the connection
-            connection = factory.createConnection();
+        // create the receiver
+        //je veux recevoir toutes les conventions
+        receiver = session.createConsumer(dest);
 
-            // create the session
-            session = connection.createSession(
-                    false, Session.AUTO_ACKNOWLEDGE);
+        //Pour le sender
+        destName = "ConventionEnCours2";
 
-            // create the receiver
-            //je veux recevoir toutes les conventions
-            receiver = session.createConsumer(dest);
-            
-            destName = "ConventionEnCours2";
+        // look up the Destination
+        dest = (Destination) context.lookup(destName);
 
-            // look up the Destination
-            dest = (Destination) context.lookup(destName);
+        // create the sender
+        sender = session.createProducer(dest);
 
-            // create the sender
-            sender = session.createProducer(dest);
-            
-            // start the connection, to enable message receipt
-            connection.start();
+        // start the connection, to enable message receipt
+        connection.start();
     }
     
     /**
@@ -174,10 +173,9 @@ public class ServiceJuridique {
      * @throws NamingException 
      */
     public void recevoir() throws NamingException {
-        //System.setProperty
         try {
+            //Dégager le while true à terme
             while(true) {
-            //for(int i = 0; i < 10; ++i){
                 Message message = receiver.receiveNoWait();
                 if (message instanceof ObjectMessage) {
                     //on récupère le message
@@ -205,15 +203,11 @@ public class ServiceJuridique {
      * Méthode permettant d'envoyer les messages JMS (préconventions validées ou refusées) du service juridique
      * vers le service des stages via la file ConventionEnCours
      * @param pc préconvention à envoyer
-     * @param validite statut de la validité de la préconvention
      * @throws NamingException
      * @throws InterruptedException 
      */
     public void envoyer(PreConvention pc) throws NamingException{
-
         try {
-            //while(true){
-            //for (int i = 0; i < count; i++) {
             ObjectMessage message = session.createObjectMessage();
             message.setObject(pc);
             sender.send(message);
@@ -247,10 +241,6 @@ public class ServiceJuridique {
      */
     public boolean aExistenceJuridique(String numSIREN) throws IOException{
         //tester si l'entreprise a une existence juridique
-        // I/O clavier/écran
-        //BufferedReader inClavier = new BufferedReader(new InputStreamReader(System.in));
-        //PrintStream outEcran = new PrintStream(System.out);
-
         // I/O JSON
         Gson gson = new Gson();
 
@@ -259,20 +249,15 @@ public class ServiceJuridique {
         // URI Service INSEE
         String uri = "http://data.opendatasoft.com/api/records/1.0/search/?dataset=sirene%40public";
 
-        // a ajuster selon requete voir mode emploi INSEE
+        // Requête
         String query = "&lang=fr";
 
         // SIREN a chercher
-        //outEcran.print("Code SIREN a rechercher : ");
-        //String siren = inClavier.readLine();
         // Pour info siren = "552100554"; //PEUGEOT.
         String siren = numSIREN;
         
         Client client = ClientBuilder.newClient();
         WebTarget wt = client.target(uri + "&q=" + siren + query);
-
-        //WebResource webResource = client.resource(uri + siren + query);
-        //System.out.println("uri appel: " + uri + "&q=" + siren + query);
 
         Invocation.Builder invocationBuilder = wt.request(MediaType.APPLICATION_JSON);
         Response response = invocationBuilder.get();
@@ -287,10 +272,6 @@ public class ServiceJuridique {
         //Si rien est trouvé : taille == 0 => retourne faux, sinon vrai (entreprise existante)
         return rec.length != 0; 
         
-        //System.out.println("Rien n'a été trouvé. Mauvais SIREN ?");
-        //for(int i = 0; i < rec.length ; i++)
-        //System.out.println("Raison sociale : " + model.getRecords()[i].getFields().getL1_normalisee() + ", Date création entité : " + model.getRecords()[i].getFields().getDcren() + ", Activité : " + model.getRecords()[i].getFields().getActivite());
-        //return false;
     }
     
     /**
@@ -301,17 +282,10 @@ public class ServiceJuridique {
      * @param dateFin date de fin de la période de stage
      * @return true si le contrat est valide/ false si inexistant ou non valide
      */
-    
     //Faire arraylist et chercher dedans sisi t'as uv
     public boolean aAssuranceValide(String compagnie, String numAssurance, DateConvention dateDeb, DateConvention dateFin){
         //tester si l'étudiant a bien le contrat numAssurance auprès de compagnie sur la période dateDeb-dateFin
         //Faire API en node qui retourne tout le temps true
         return true;
     }
-    
-    
-
-    
-    
-    
 }
